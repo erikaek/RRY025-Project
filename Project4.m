@@ -10,44 +10,39 @@ clear all, clc, clf, close all;
 addpath(genpath('ProvidedFiles'))
 f=importdata('forest.mat');
 
-A=0;
+A=1;
 gammaL=[0.025 0.25 2.5];
 gammaH=2;
-c=1;
-D0=80;
+kVec=1/(80^2);
+
 
 n=1;
-for i=1:length(A)
-    for j=1:length(gammaL) 
-        for k=1:length(gammaH)
-            for l=1:length(c)
-                for m=1:length(D0)
-                    
-                    figure(n)
-                    suptitle(['A=',num2str(A(i)),' gL=',num2str(gammaL(j))...
-                        ,' gH=',num2str(gammaH(k)),' c=',num2str(c(l)),' D_0='...
-                        ,num2str(D0(m))]);
-                    %set(t,'interpreter','latex')
-                    subplot(3,2,1)
-                    imshow(f,[])
-                    subplot(3,2,2)
-                    imhist(f)
-                    
-                    g = homomorphic( f , A(i) , gammaL(j), gammaH(k), c(l), D0(m));
-                    
-                    subplot(3,2,3)
-                    imshow(g,[])
-                    subplot(3,2,4)
-                    imhist(g)
-                    
-                    subplot(3,2,5)
-                    imshow(abs(f-g))
-                    subplot(3,2,6)
-                    imhist(abs(f-g))
-                    
-                    n=n+1;
-                end
-            end
+for gL=gammaL
+    for gH=gammaH
+        for k=kVec
+            
+            figure(n)
+            suptitle(['gL=',num2str(gL),' gH=',num2str(gH),' c/D0=',num2str(k)]);
+            %set(t,'interpreter','latex')
+            subplot(3,2,1)
+            imshow(f,[])
+            subplot(3,2,2)
+            imhist(f)
+            
+            g = homomorphic( f , A , gL, gH , k);
+            
+            subplot(3,2,3)
+            imshow(g,[])
+            subplot(3,2,4)
+            imhist(g)
+            
+            subplot(3,2,5)
+            imshow(abs(f-g))
+            subplot(3,2,6)
+            imhist(abs(f-g))
+            
+            n=n+1;
+            
         end
     end
 end

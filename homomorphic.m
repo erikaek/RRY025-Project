@@ -1,4 +1,4 @@
-function [ g ] = homomorphic( f , A , gammaL, gammaH, c, D0)
+function [ g ] = homomorphic( f , A , gammaL, gammaH, k)
 %homomorphic: Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -19,7 +19,7 @@ F=fftshift(fft2(f_log,P,Q));
 D = raduv(F);
 
 % creating the homomorphic filter
-H=(gammaH-gammaL)*(1-exp(-c*(D/D0).^2))+gammaL;
+H=(gammaH-gammaL)*(1-exp(-k*(D).^2))+gammaL;
 
 % filtering image and changing back to original coord. syst.
 G=ifftshift(F.*H);
