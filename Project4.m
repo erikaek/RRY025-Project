@@ -1,11 +1,8 @@
 clear all, clc, clf, close all;
-% frågor till alessandro: 
-% -vilket värde på A?
-% -zeropadding till filter storlek + bild, vad ska vi tänka oss som
-%  filter-storlek
-% -padda filtret?
-% -bara gL som gör skillnad?
-% -4 oberoende variabler, är gL och gH verkligen oberoende? Kan A räknas som en variabel? 
+% fr?gor till alessandro: 
+% -vilket v?rde p? A?
+% -bara gL som g?r skillnad?
+% -4 oberoende variabler, ?r gL och gH verkligen oberoende? Kan A r?knas som en variabel? 
 
 addpath(genpath('ProvidedFiles'))
 f=importdata('forest.mat');
