@@ -16,18 +16,10 @@ Q=2^(nextpow2(2*q+1));
 F=fftshift(fft2(f_log,P,Q));
 
 % creating the template grid used to create the filter
-%D = raduv(F);
-maxu = Q/2;
-maxv = P/2;
-u = linspace(1, 2*maxu, 2*maxu) - maxu;
-v = linspace(1, 2*maxv, 2*maxv) - maxv;
-[uu,vv] = meshgrid(u,v);
-D = sqrt(uu.^2/maxu^2 + vv.^2/maxv^2);
+D = raduv(F);
 % creating the homomorphic filter
 H=(gammaH-gammaL)*(1-exp(-k*(D).^2))+gammaL;
-
-% save the valus of D and H to be loaded in plot_filter.m
-save('PQH.txt', 'P', 'Q', 'H', '-mat'); 
+save('D.txt', 
 
 % filtering image and changing back to original coord. syst.
 G=ifftshift(F.*H);
