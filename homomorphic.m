@@ -1,4 +1,4 @@
-function [ g ] = homomorphic( f , A , gammaL, gammaH, k)
+function [ g ] = homomorphic( f , A , gammaL, gammaH, c)
 %homomorphic: Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -19,15 +19,14 @@ F=fftshift(fft2(f_log,P,Q));
 %D = raduv(F);
 maxu = Q/2;
 maxv = P/2;
-u = linspace(1, 2*maxu, 2*maxu) - maxu;
-v = linspace(1, 2*maxv, 2*maxv) - maxv;
+u = linspace(1, Q, Q) - maxu;
+v = linspace(1, P, P) - maxv;
 [uu,vv] = meshgrid(u,v);
 D = sqrt(uu.^2/maxu^2 + vv.^2/maxv^2);
-% creating the homomorphic filter
-H=(gammaH-gammaL)*(1-exp(-k*(D).^2))+gammaL;
+D0=sqrt(P^2+Q^2);
 
-% save the valus of D and H to be loaded in plot_filter.m
-save('PQH.txt', 'P', 'Q', 'H', '-mat'); 
+% creating the homomorphic filter
+H=(gammaH-gammaL)*(1-exp(-(D/c).^2))+gammaL;
 
 % filtering image and changing back to original coord. syst.
 G=ifftshift(F.*H);

@@ -1,10 +1,9 @@
-clear all;
+clear all,close all;
 
-gammaL=0.2%:0.1:2.5;
-gammaH=0.25;%[0.2 2 20];
-k=0.1/(80^2);%[0.01/(80^2) 0.1/(80^2) 1/(80^2)];
-
-% 
+gammaL=0.25;%:0.1:2.5;
+gammaH=2;%[0.2 2 20];
+D01=80;
+D02=sqrt(512^2+512^2);
 
 f=double(imread('trees.tif'));
 [p,q]=size(f);
@@ -16,40 +15,61 @@ maxv = P/2;
 u = linspace(1, 2*maxu, 2*maxu) - maxu;
 v = linspace(1, 2*maxv, 2*maxv) - maxv;
 [uu,vv] = meshgrid(u,v);
-D = sqrt(uu.^2/maxu^2 + vv.^2/maxv^2);
+D = sqrt(uu.^2+ vv.^2);
 
-H=(gammaH-gammaL)*(1-exp(-k*(D).^2))+gammaL;
-hLimits = [min(min(H)), max(max(H))];
+H1=(gammaH-gammaL)*(1-exp(-(D/D01).^2))+gammaL;
+hLimits1 = [min(min(H1)), max(max(H1))];
 
-t=suptitle(['$\gamma_L$=',num2str(gammaL),' $\gamma_H$=',num2str(gammaH),' $k$=',num2str(k)]);
-set(t,'Interpreter','latex')
+H2=(gammaH-gammaL)*(1-exp(-(D/D02).^2))+gammaL;
+hLimits2 = [min(min(H1)), max(max(H2))];
 
-subplot(2, 2, 1);
+figure(1)
 colormap hot;
-contour(uu, vv, H);
-c = colorbar('Location','eastoutside');
-%c.Label.String = 'H(u, v)';
-caxis(hLimits);
-t=xlabel('$u$');
-set(t,'Interpreter','latex');
-t=ylabel('$v$');
-set(t,'Interpreter','latex');
-            
+contour(uu, vv, H1);
+colorbar('Location','eastoutside');
+caxis(hLimits1);
+title('3D Homomorphic Filter: $D_0=80$','Interpreter','latex','FontSize',16)            
+xlabel('$u$','Interpreter','latex','FontSize',16);
+ylabel('$v$','Interpreter','latex','FontSize',16);
+set(gca,'YLim',[-500 500])
+set(gca,'YTick',(-500:500:500))
 
-subplot(2, 2, 2);
-x = uu(1, :); 
-x = x(end/2:end);
-y = H(1, :);
-y = y(end/2:end);
+figure(2)
+x = D(end/2:end);
+y = H1(end/2:end);
 
 plot(x, y);
-xlim([min(x), max(x)]);
-ylim(hLimits);
-t=xlabel('$u$');
-set(t,'Interpreter','latex');
-t=ylabel('$H(u, v)$');
-set(t,'Interpreter','latex');
-set(gca,'YTickLabel',{' '})
+axis([0 maxu 0 2.1])
+title('2D Homomorphic Filter: $D_0=80$','Interpreter','latex','FontSize',18)            
+xlabel('$u$','Interpreter','latex','FontSize',16);
+ylabel('$H(u, v)$','Interpreter','latex','FontSize',16);
+text(15,gammaL,'$\gamma_L$','Interpreter','latex','FontSize',14)
+text(100,gammaH,'$\gamma_H$','Interpreter','latex','FontSize',14)
+
+figure(3)
+colormap hot;
+contour(uu, vv, H2);
+colorbar('Location','eastoutside');
+caxis(hLimits2);
+title('3D Homomorphic Filter: $D_0=\sqrt{(P/2)^2+(Q/2)^2}$','Interpreter','latex','FontSize',16)            
+xlabel('$u$','Interpreter','latex','FontSize',16);
+ylabel('$v$','Interpreter','latex','FontSize',16);
+set(gca,'YLim',[-500 500])
+set(gca,'YTick',(-500:500:500))
+
+figure(4)
+x = D(end/2:end);
+y = H2(end/2:end);
+
+plot(x, y);
+axis([0 maxu 0 2.1])
+title('2D Homomorphic Filter: $D_0=\sqrt{(P/2)^2+(Q/2)^2}$','Interpreter','latex','FontSize',16)            
+xlabel('$u$','Interpreter','latex','FontSize',16);
+ylabel('$H(u, v)$','Interpreter','latex','FontSize',16);
+text(15,gammaL+0.1,'$\gamma_L$','Interpreter','latex','FontSize',14)
+text(450,gammaH,'$\gamma_H\rightarrow$','Interpreter','latex','FontSize',14)
 
 
-print('-bestfit','filters','-dpdf')
+
+
+
