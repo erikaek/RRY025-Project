@@ -22,11 +22,11 @@ maxv = P/2;
 u = linspace(1, Q, Q) - maxu;
 v = linspace(1, P, P) - maxv;
 [uu,vv] = meshgrid(u,v);
-D = sqrt(uu.^2/maxu^2 + vv.^2/maxv^2);
-D0=sqrt(P^2+Q^2);
+D = sqrt(uu.^2 + vv.^2);
+D0=sqrt(maxu^2+maxv^2);
 
 % creating the homomorphic filter
-H=(gammaH-gammaL)*(1-exp(-(D/c).^2))+gammaL;
+H=(gammaH-gammaL)*(1-exp(-c*(D/D0).^2))+gammaL;
 
 % filtering image and changing back to original coord. syst.
 G=ifftshift(F.*H);
